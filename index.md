@@ -105,12 +105,12 @@ public async Task<IActionResult> Get()
 Obtener por identificación el detalles de un desarrollador que coincide con el ID pasado como parámetro. 
 
 ```
-`[HttpGet("{id}")]`
-`public async Task<IActionResult> Get(int id)`
-`{`
- `  var programador = await _context.Programadores.FirstOrDefaultAsync(a => a.Id == id);`
-`   return Ok(programador);`
-`}`
+[HttpGet("{id}")]
+public async Task<IActionResult> Get(int id)
+{
+  var programador = await _context.Programadores.FirstOrDefaultAsync(a => a.Id == id);
+   return Ok(programador);
+}
 ```
 ## Create
 Creamos un nuevo Programador con el objeto pasado como parametro.
@@ -127,27 +127,27 @@ public async Task<IActionResult> Post(Programador programador)
 ## Update
 Modificamos un programador existente.
 ```
-`[HttpPut]
+[HttpPut]
 public async Task<IActionResult> Put(Programador programador)
 {
    _context.Entry(programador).State = EntityState.Modified;
    await _context.SaveChangesAsync();
    return NoContent();
-}`
+}
 ```
 
 ## Delete
 Eliminamos un programador por su Id.
 
 ```
-`[HttpDelete("{id}")]
+[HttpDelete("{id}")]
 public async Task<IActionResult> Delete(int id)
 {
    var programador = new Programador { Id = id };
    _context.Remove(programador);
    await _context.SaveChangesAsync();
    return NoContent();
-}`
+}
 ```
 # Introducción al ABM en Blazor
 Una vez terminado el Backend, continuemos construyendo nuestra aplicación ABM Blazor. Nuestra Agenda es hacer Operaciones de ABM (CRUD en ingles) en la Entidad Programador. Básicamente, hemos completado nuestra capa de datos. Construyamos ahora la interfaz de usuario.
@@ -341,30 +341,34 @@ Ahora, comencemos a utilizar el componente Formulario creado anteriormente. Cons
 }
 ```
 
-```markdown
-Syntax highlighted code block
+Ejecute la aplicación para hacer una prueba. Vaya a la pestaña Programadores y haga clic en el botón Nuevo. Aquí agregue datos de muestra y presione Nuevo Programador.
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+### Te sorprenderá la velocidad de la aplicación. Bastante suave, ¿no? Además, ya hemos construido bastante bien nuestro componente Crear. Ahora construyamos nuestro componente final. Actualizar.
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+# Componente Editar
+Cree un nuevo componente en Pages/Programadores/Edit.razor
 ```
+@page "/programador/edit/{programadorId:int}"
+@inject HttpClient Clientehttp
+@inject NavigationManager uriHelper
+@inject IJSRuntime js
+<h3>Editar</h3>
+<Formulario ButtonText="Actualizar" programador="@programador"
+      OnValidSubmit="@EditarProgramador" />
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/fajouri/fajouri.blog.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+@code {
+    [Parameter] public int programadorId { get; set; }
+    Programador programador = new Programador();
+    protected async override Task OnParametersSetAsync()
+    {
+        programador = await Clientehttp.GetFromJsonAsync<Programador>($"api/programador/{programadorId}");
+    }
+    async Task EditarProgramador()
+    {
+        await Clientehttp.PutAsJsonAsync("api/programador", programador);
+        await js.InvokeVoidAsync("alert", $"Se ha modificado exitosamente!");
+        uriHelper.NavigateTo("programador");
+    }
+}
+```
