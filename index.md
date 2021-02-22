@@ -6,7 +6,7 @@ La creación de una aplicación ABM es como el Hola mundo para desarrolladores i
 
 Blazor es la novedad del mundo .NET . Es muy importante para un desarrollador estar al tanto de lo que esta increíble tecnología contiene en sí misma. ¿Qué mejor forma de comprender sus habilidades que hacerlo aprendiendo a implementar funciones de ABM utilizando Blazor y Entity Framework Core?
 
-## Qué estaremos construyendo
+## Qué vamos a construir
 Pensé que sería bueno si les mostrara lo que vamos a construir antes de saltar al tutorial para que tengan una buena idea del alcance de este tutorial y lo cubriremos. Tendremos una implementación simple de Blazor ABM en la entidad Programador usando Blazor WebAssembly y Entity Framework Core. También intentaré demostrar ciertas buenas prácticas al desarrollar aplicaciones ABM de Blazor.
 
 ## Creando el proyecto Blazor ABM
