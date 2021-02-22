@@ -105,12 +105,12 @@ public async Task<IActionResult> Get()
 Obtener por identificación el detalles de un desarrollador que coincide con el ID pasado como parámetro. 
 
 ```
-[HttpGet("{id}")]
+`[HttpGet("{id}")]
 public async Task<IActionResult> Get(int id)
 {
    var programador = await _context.Programadores.FirstOrDefaultAsync(a => a.Id == id);
    return Ok(programador);
-}
+}`
 ```
 ## Create
 Creamos un nuevo Programador con el objeto pasado como parametro.
@@ -127,27 +127,27 @@ public async Task<IActionResult> Post(Programador programador)
 ## Update
 Modificamos un programador existente.
 ```
-[HttpPut]
+`[HttpPut]
 public async Task<IActionResult> Put(Programador programador)
 {
    _context.Entry(programador).State = EntityState.Modified;
    await _context.SaveChangesAsync();
    return NoContent();
-}
+}`
 ```
 
 ## Delete
 Eliminamos un programador por su Id.
 
 ```
-[HttpDelete("{id}")]
+`[HttpDelete("{id}")]
 public async Task<IActionResult> Delete(int id)
 {
    var programador = new Programador { Id = id };
    _context.Remove(programador);
    await _context.SaveChangesAsync();
    return NoContent();
-}
+}`
 ```
 # Introducción al ABM en Blazor
 Una vez terminado el Backend, continuemos construyendo nuestra aplicación ABM Blazor. Nuestra Agenda es hacer Operaciones de ABM (CRUD en ingles) en la Entidad Programador. Básicamente, hemos completado nuestra capa de datos. Construyamos ahora la interfaz de usuario.
