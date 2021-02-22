@@ -9,7 +9,7 @@ Blazor es la novedad del mundo .NET . Es muy importante para un desarrollador es
 ## Qué vamos a construir
 Pensé que sería bueno si les mostrara lo que vamos a construir antes de saltar al tutorial para que tengan una buena idea del alcance de este tutorial y lo cubriremos. Tendremos una implementación simple de Blazor ABM en la entidad Programador usando Blazor WebAssembly y Entity Framework Core. También intentaré demostrar ciertas buenas prácticas al desarrollar aplicaciones ABM de Blazor.
 
-![exemplo](/assets/Listado.PNG){:class="img-responsive"}
+![Pantalla que lista los programadores que encuentra en el DB](/assets/images/Listado.PNG)
 
 ## Creando el proyecto Blazor ABM
 Comencemos con la aplicación Blazor WebAssembly ABM creando una nueva aplicación Blazor. Siga las capturas de pantalla a continuación. 
@@ -345,6 +345,7 @@ Ahora, comencemos a utilizar el componente Formulario creado anteriormente. Cons
 
 Ejecute la aplicación para hacer una prueba. Vaya a la pestaña Programadores y haga clic en el botón Nuevo. Aquí agregue datos de muestra y presione Nuevo Programador.
 
+![Pantalla para crear programadores](/assets/images/Crear.PNG)
 
 ### Te sorprenderá la velocidad de la aplicación. Bastante suave, ¿no? Además, ya hemos construido bastante bien nuestro componente Crear. Ahora construyamos nuestro componente final. Actualizar.
 
@@ -374,6 +375,8 @@ Cree un nuevo componente en Pages/Programadores/Edit.razor
     }
 }
 ```
+![Pantalla para editar programadores](/assets/images/Editar.PNG)
+![Actualizacion](/assets/images/Actualizado.PNG)
 
 Resumen de la aplicación ABM con Blazor 
 A estas alturas, podemos crear una aplicación completa ABM con Blazor desde cero. Hemos cubierto los conceptos básicos de ABM con Blazor, sus etiquetas y la reutilización de componentes. También hemos visto una estructura de carpetas considerada como buena práctica que es bastante aplicable para las aplicaciones ABM Blazor en general. Espero que hayan entendido y disfrutado este tutorial detallado. Puede encontrar el código fuente completo [aquí](https://github.com/fajouri/Blazor-ABM-Core-5-EF-).
