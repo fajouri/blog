@@ -49,11 +49,12 @@ Vaya a appsettings.json en el Proyecto de servidor y agregue la Cadena de conexi
 Necesitaremos un contexto de base de datos para trabajar con los datos. Cree una nueva clase en el proyecto de servidor en Data / AplicacionDBContext.cs
 ```
  public class AplicacionDbContext:DbContext
-    {
-        public AplicacionDbContext(DbContextOptions<AplicacionDbContext> options) : base(options)
-        {
-        }
-        public DbSet<Programador> Programadores { get; set; }
+ {
+   public AplicacionDbContext(DbContextOptions<AplicacionDbContext> options) : base(options)
+   {
+   }
+ 
+ public DbSet<Programador> Programadores { get; set;}
 ```
 Agregaremos DbSet de Programadores a nuestro contexto. Usando esta clase de contexto, podremos realizar operaciones en nuestra base de datos que generaremos mas adelante.
 
@@ -68,7 +69,6 @@ Ahora que nuestro Entity Framework Core está configurado y listo en la aplicaci
 ```
 add-migration Initial
 update-database
-
 ```
 ### Importante: asegúrese de haber elegido el proyecto del servidor como predeterminado.
 
@@ -77,17 +77,15 @@ Ahora que nuestra base de datos y EF Core están configurados, crearemos un cont
 
 ```
 [Route("api/[controller]")]
-    [ApiController]
-    public class ProgramadorController : ControllerBase
-    {
-        private readonly AplicacionDbContext _context;
-
-        public ProgramadorController(AplicacionDbContext context)
-        {
-            _context = context;
-        }
-    }
-        
+[ApiController]
+public class ProgramadorController : ControllerBase
+{
+   private readonly AplicacionDbContext _context;
+   public ProgramadorController(AplicacionDbContext context)
+   {
+    _context = context;
+   }
+}
 ```
 
 Aquí hemos inyectado una nueva instancia de ApplicationDBContent al constructor del controlador. Continuemos agregando cada uno de los end points o metodos para nuestras operaciones de ABM.
@@ -95,19 +93,19 @@ Aquí hemos inyectado una nueva instancia de ApplicationDBContent al constructor
 GET
 Un método para obtener todos los programadores de la instancia de contexto.
 ```
- [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var programadores = await _context.Programadores.ToListAsync();
-            return Ok(programadores);
-        }
+[HttpGet]
+public async Task<IActionResult> Get()
+{
+   var programadores = await _context.Programadores.ToListAsync();
+   return Ok(programadores);
+}
 
-  [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var programador = await _context.Programadores.FirstOrDefaultAsync(a => a.Id == id);
-            return Ok(programador);
-        }
+[HttpGet("{id}")]
+public async Task<IActionResult> Get(int id)
+{
+   var programador = await _context.Programadores.FirstOrDefaultAsync(a => a.Id == id);
+   return Ok(programador);
+}
 ```
 
 
