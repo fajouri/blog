@@ -105,12 +105,12 @@ public async Task<IActionResult> Get()
 Obtener por identificación el detalles de un desarrollador que coincide con el ID pasado como parámetro. 
 
 ```
-`[HttpGet("{id}")]
-public async Task<IActionResult> Get(int id)
-{
-   var programador = await _context.Programadores.FirstOrDefaultAsync(a => a.Id == id);
-   return Ok(programador);
-}`
+`[HttpGet("{id}")]`
+`public async Task<IActionResult> Get(int id)`
+`{`
+ `  var programador = await _context.Programadores.FirstOrDefaultAsync(a => a.Id == id);`
+`   return Ok(programador);`
+`}`
 ```
 ## Create
 Creamos un nuevo Programador con el objeto pasado como parametro.
