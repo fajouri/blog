@@ -170,11 +170,15 @@ A lo largo de este tutorial usaremos la clase de modelo Shared/Models/Programado
 ```
 @using Blazor.Abm.Shared.Models
 ```
-# Estructura de carpeta propuesta
+# Estructura de carpeta sugerida
 Esto es considerado una buena práctica. La idea es la siguiente.
 
 Tenga una carpeta debajo de las páginas que serán específicas para una entidad. En nuestro caso, tenemos un Programador como entidad.
 En esta carpeta, intentamos incluir todos los componentes de Razor en cuestión.
+
+![Estructura de carpeta sugerida](/assets/images/Carpeta.PNG)
+
+
 Si ya es un desarrollador de ASP.NET Core, sabrá que mientras implementamos un ABM estándar, tenemos muchas cosas similares (UI) para crear y actualizar formularios. Para ello, creamos un componente común llamado Formulario que será compartido por los componentes Crear y Editar.
 Listado.razor es la pantalla principal que permitr recuperar todos los datos y mostrarlos en una tabla Bootstrap.
 
