@@ -374,4 +374,4 @@ Cree un nuevo componente en Pages/Programadores/Edit.razor
 ```
 
 Resumen de la aplicación ABM con Blazor 
-A estas alturas, podemos crear una aplicación completa ABM con Blazor desde cero. Hemos cubierto los conceptos básicos de ABM con Blazor, sus etiquetas y la reutilización de componentes. También hemos visto una estructura de carpetas considerada como buena práctica que es bastante aplicable para las aplicaciones ABM Blazor en general. Espero que hayan entendido y disfrutado este tutorial detallado. Puede encontrar el código fuente completo aquí.
+A estas alturas, podemos crear una aplicación completa ABM con Blazor desde cero. Hemos cubierto los conceptos básicos de ABM con Blazor, sus etiquetas y la reutilización de componentes. También hemos visto una estructura de carpetas considerada como buena práctica que es bastante aplicable para las aplicaciones ABM Blazor en general. Espero que hayan entendido y disfrutado este tutorial detallado. Puede encontrar el código fuente completo [aquí](https://github.com/fajouri/Blazor-ABM-Core-5-EF-).
