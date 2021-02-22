@@ -22,7 +22,7 @@ Puedes ver que Visual Studio genera automáticamente 3 proyectos diferentes, es 
 **Básicamente, el servidor tendrá los puntos de entrada de la API (End Points) a los que puede acceder el proyecto cliente. Tenga en cuenta que esta es una aplicación única y se ejecuta en el mismo puerto. Por lo tanto, no surge la necesidad de acceso a CORS. Todos estos proyectos se ejecutarán directamente en su navegador y no necesitan un servidor dedicado.**
 
 Para comenzar con nuestra aplicación Blazor ABM, agreguemos un modelo de Programador a nuestro proyecto compartido en la carpeta Modelos (crea la carpeta). 
-```
+```C#
    public class Programador
     {
         public int Id { get; set; }
@@ -41,7 +41,7 @@ Install-Package Microsoft.EntityFrameworkCore.Tools
 Install-Package Microsoft.EntityFrameworkCore.SqlServer
 ```
 Vaya a appsettings.json en el Proyecto de servidor y agregue la Cadena de conexión.
-```
+```C#
 "ConnectionStrings": {
     "DefaultConnection": "<Connection String Here>"
   },
@@ -128,7 +128,7 @@ public async Task<IActionResult> Post(Programador programador)
 
 ## Update
 Modificamos un programador existente.
-```
+```C#
 [HttpPut]
 public async Task<IActionResult> Put(Programador programador)
 {
