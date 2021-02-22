@@ -45,7 +45,7 @@ Vaya a appsettings.json en el Proyecto de servidor y agregue la Cadena de conexi
   },
   
 ```
-##Agregar contexto de aplicación
+## Agregar contexto de aplicación
 Necesitaremos un contexto de base de datos para trabajar con los datos. Cree una nueva clase en el proyecto de servidor en Data / AplicacionDBContext.cs
 ```
  public class AplicacionDbContext:DbContext
@@ -58,7 +58,7 @@ Necesitaremos un contexto de base de datos para trabajar con los datos. Cree una
 ```
 Agregaremos DbSet de Programadores a nuestro contexto. Usando esta clase de contexto, podremos realizar operaciones en nuestra base de datos que generaremos mas adelante.
 
-#Configurando
+# Configuración
 Necesitaremos agregar EF Core y definir su cadena de conexión. Navegue hasta Startup.cs que se encuentra en el proyecto del servidor y agregue la siguiente línea al método ConfigureServices.
 ```
 services.AddDbContext<AplicacionDbContext>(op =>
@@ -90,7 +90,7 @@ public class ProgramadorController : ControllerBase
 
 Aquí hemos inyectado una nueva instancia de ApplicationDBContent al constructor del controlador. Continuemos agregando cada uno de los end points o metodos para nuestras operaciones de ABM.
 
-GET
+## GET
 Un método para obtener todos los programadores de la instancia de contexto.
 ```
 [HttpGet]
@@ -99,7 +99,12 @@ public async Task<IActionResult> Get()
    var programadores = await _context.Programadores.ToListAsync();
    return Ok(programadores);
 }
+```
 
+## GET BY ID
+Obtener por identificación el detalles de un desarrollador que coincide con el ID pasado como parámetro. 
+
+```
 [HttpGet("{id}")]
 public async Task<IActionResult> Get(int id)
 {
@@ -107,7 +112,234 @@ public async Task<IActionResult> Get(int id)
    return Ok(programador);
 }
 ```
+## Create
+Creamos un nuevo Programador con el objeto pasado como parametro.
+```
+[HttpPost]
+public async Task<IActionResult> Post(Programador programador)
+{
+   _context.Add(programador);
+   await _context.SaveChangesAsync();
+   return Ok(programador.Id);
+}
+```
 
+## Update
+Modificamos un programador existente.
+```
+[HttpPut]
+public async Task<IActionResult> Put(Programador programador)
+{
+   _context.Entry(programador).State = EntityState.Modified;
+   await _context.SaveChangesAsync();
+   return NoContent();
+}
+```
+
+## Delete
+Eliminamos un programador por su Id.
+
+```
+[HttpDelete("{id}")]
+public async Task<IActionResult> Delete(int id)
+{
+   var programador = new Programador { Id = id };
+   _context.Remove(programador);
+   await _context.SaveChangesAsync();
+   return NoContent();
+}
+```
+# Introducción al ABM en Blazor
+Una vez terminado el Backend, continuemos construyendo nuestra aplicación ABM Blazor. Nuestra Agenda es hacer Operaciones de ABM (CRUD en ingles) en la Entidad Programador. Básicamente, hemos completado nuestra capa de datos. Construyamos ahora la interfaz de usuario.
+
+## Agregar una nueva entrada al menú de navegación
+Tendremos que agregar una nueva entrada en la barra lateral del menú de navegación para acceder a las Páginas. En el proyecto del cliente, navegue a Shared/NavMenu.razor y agregue una entrada similar a la siguiente.
+
+```
+<li class="nav-item px-3">
+   <NavLink class="nav-link" href="programador">
+      <span class="oi oi-people" aria-hidden="true"></span> Programadores
+   </NavLink>
+ </li>
+```
+
+# Espacios de nombres compartidos
+A lo largo de este tutorial usaremos la clase de modelo Shared/Models/Programador.cs. Por lo tanto agreguemos este espacio de nombres a _Imports.razor, para que se pueda acceder a él en todos nuestros componentes nuevos.
+```
+@using Blazor.Abm.Shared.Models
+```
+# Estructura de carpeta propuesta
+Esto es considerado una buena práctica. La idea es la siguiente.
+
+Tenga una carpeta debajo de las páginas que serán específicas para una entidad. En nuestro caso, tenemos un Programador como entidad.
+En esta carpeta, intentamos incluir todos los componentes de Razor en cuestión.
+Si ya es un desarrollador de ASP.NET Core, sabrá que mientras implementamos un ABM estándar, tenemos muchas cosas similares (UI) para crear y actualizar formularios. Para ello, creamos un componente común llamado Formulario que será compartido por los componentes Crear y Editar.
+Listado.razor es la pantalla principal que permitr recuperar todos los datos y mostrarlos en una tabla Bootstrap.
+
+# Componente Listado
+Comenzaremos construyendo nuestro componente de índice que busca a todos los programadores de la base de datos. Llamémoslo Componente Listado. Cree un nuevo componente Blazor en Pages, Pages/Programadores/Listado.razor
+
+```
+@page "/programador"
+@inject HttpClient clienteHttp
+@inject IJSRuntime js
+<h3>Programadores</h3>
+<small>Agrega los programadores que desee</small>
+<div class="form-group">
+    <a class="btn btn-success" href="programador/create"><i class="oi oi-plus"></i> Nuevo</a>
+</div>
+<br>
+@if (programadores == null)
+{
+    <text>Loading...</text>
+}
+else if (!programadores.Any())
+{
+    <text>No hay datos.</text>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Experiencia (Años)</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var programador in programadores)
+        {
+            <tr>
+                <td>@programador.Id</td>
+                <td>@programador.Nombre</td>
+                <td>@programador.Apellido</td>
+                <td>@programador.Email</td>
+                <td>@programador.Experiencia</td>
+                <td>
+                    <a class="btn btn-success" href="programador/edit/@programador.Id">Editar</a>
+                    <button class="btn btn-danger" @onclick="@(() => Delete(programador.Id))">Eliminar</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+@code {
+    Programador[] programadores { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        programadores = await clienteHttp.GetFromJsonAsync<Programador[]>("api/programador");
+    }
+
+    async Task Delete(int id)
+    {
+        var programador = programadores.First(x => x.Id == id);
+        if (await js.InvokeAsync<bool>("confirm", $"Quiere eliminar el registro de {programador.Nombre} ({programador.Id})?"))
+        {
+            await clienteHttp.DeleteAsync($"api/programador/{id}");
+            await OnInitializedAsync();
+        }
+    }
+
+}
+```
+
+## ¿Qué es IJSRuntime?
+Anteriormente, hemos aprendido que también es posible ejecutar Javascripts en nuestra aplicación Blazor. La interfaz IJSRuntime actúa como puerta de entrada a JS. Este objeto nos proporciona métodos para invocar funciones JS en aplicaciones Blazor.
+
+Creemos nuestra aplicación! y hagamos la prueba.
+
+
+¡Tu primer componente ABM esta listo! 😀 Puedes ver que no tenemos ningún registro. Agreguemos un componente Create Razor para poder agregar nuevas entradas a la base de datos.
+
+### Pero antes, necesitaremos crear el formilario comun que compartiremos entre los componentes de cración y edición.
+
+## Componente Formulario
+Agreguemos un nuevo componente Razor en Pages/Programadores/Formulario.razor
+
+```
+<EditForm Model="@programador" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Nombre :</label>
+        <div>
+            <InputText @bind-Value="@programador.Nombre" />
+            <ValidationMessage For="@(() => programador.Nombre)" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Apellido :</label>
+            <div>
+                <InputText @bind-Value="@programador.Apellido" />
+                <ValidationMessage For="@(() => programador.Apellido)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Email :</label>
+            <div>
+                <InputText @bind-Value="@programador.Email" />
+                <ValidationMessage For="@(() => programador.Email)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Experiencia :</label>
+            <div>
+                <InputNumber @bind-Value="@programador.Experiencia" />
+                <ValidationMessage For="@(() => programador.Experiencia)" />
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+</EditForm>
+@code {
+    [Parameter] public Programador programador { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Guardar";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}
+```
+
+### Pensando en esto, siento que esto es bastante similar a los conceptos de Interfaz y Concreto. Entiéndalo de esta manera. El componente Formulario es la interfaz que tiene las propiedades y métodos necesarios. Y el componente Crear / Editar sería la clase Concreto que tiene la implementación real de las propiedades / métodos de la interfaz. ¿No tiene sentido? Lea este párrafo nuevamente después de pasar por la sección Crear componente.
+
+## ¿Para qué sirve la etiqueta de parámetro?
+En Blazor, se puede agregar parámetros a cualquier componente decorándolos con una etiqueta de parámetro [Parameter]. Hace disponible para que los componentes externos pasen estos parámetros. En nuestro caso, hemos definido el objeto Programador como uno de los parámetros de los componentes del Formulario. Por lo tanto, los otros componentes que utilizarán los componentes de formulario, es decir, los componentes de creación / edición tienen una opción para pasar el objeto de programador como un parámetro a los componentes de formulario. Esto ayuda a una alta reutilización de los componentes.
+```
+@code {
+    [Parameter] public Programador programador { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Guardar";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}
+```
+
+## Componente Crear  
+Ahora, comencemos a utilizar el componente Formulario creado anteriormente. Construiremos una interfaz para agregar un nuevo programador. Cree un nuevo componente Razor, Pages/Programadores/Create.razor
+```
+@page "/programador/create"
+@inject HttpClient ClienteHttp
+@inject NavigationManager UriHelper
+<h3>Alta</h3>
+<Formulario ButtonText="Nuevo Programador" programador="@programador" OnValidSubmit="@NuevoProgramador" />
+
+@code {
+    Programador programador = new Programador();
+    async Task NuevoProgramador()
+    {
+        await ClienteHttp.PostAsJsonAsync("api/programador", programador);
+        UriHelper.NavigateTo("programador");
+    }
+}
+```
 
 ```markdown
 Syntax highlighted code block
