@@ -310,7 +310,7 @@ Agreguemos un nuevo componente Razor en Pages/Programadores/Formulario.razor
 }
 ```
 
-### Pensando en esto, siento que esto es bastante similar a los conceptos de Interfaz y Concreto. Entiéndalo de esta manera. El componente Formulario es la interfaz que tiene las propiedades y métodos necesarios. Y el componente Crear / Editar sería la clase Concreto que tiene la implementación real de las propiedades / métodos de la interfaz. ¿No tiene sentido? Lea este párrafo nuevamente después de pasar por la sección Crear componente.
+_Pensando en esto, siento que esto es bastante similar a los conceptos de Interfaz y Concreto. Entiéndalo de esta manera. El componente Formulario es la interfaz que tiene las propiedades y métodos necesarios. Y el componente Crear / Editar sería la clase Concreto que tiene la implementación real de las propiedades / métodos de la interfaz. ¿No tiene sentido? Lea este párrafo nuevamente después de pasar por la sección Crear componente._
 
 ## ¿Para qué sirve la etiqueta de parámetro?
 En Blazor, se puede agregar parámetros a cualquier componente decorándolos con una etiqueta de parámetro [Parameter]. Hace disponible para que los componentes externos pasen estos parámetros. En nuestro caso, hemos definido el objeto Programador como uno de los parámetros de los componentes del Formulario. Por lo tanto, los otros componentes que utilizarán los componentes de formulario, es decir, los componentes de creación / edición tienen una opción para pasar el objeto de programador como un parámetro a los componentes de formulario. Esto ayuda a una alta reutilización de los componentes.
